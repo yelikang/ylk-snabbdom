@@ -139,19 +139,19 @@ function setTextContent(node: Node, text: string | null): void {
 function getTextContent(node: Node): string | null {
   return node.textContent;
 }
-
+// 是否元素节点
 function isElement(node: Node): node is Element {
   return node.nodeType === 1;
 }
-
+// 是否文本节点
 function isText(node: Node): node is Text {
   return node.nodeType === 3;
 }
-
+// 是否注释节点
 function isComment(node: Node): node is Comment {
   return node.nodeType === 8;
 }
-
+// 是否文档片段
 function isDocumentFragment(node: Node): node is DocumentFragment {
   return node.nodeType === 11;
 }

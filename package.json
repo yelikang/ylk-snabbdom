@@ -35,7 +35,6 @@
     "examples": "serve .",
     "format": "prettier --write .",
     "format-check": "prettier --check .",
-    "prepare": "husky install",
     "lint": "eslint .",
     "unit": "web-test-runner \"test/unit/*.{ts,tsx}\" --node-resolve --coverage",
     "release": "npm run test && release-it",

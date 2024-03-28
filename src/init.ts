@@ -97,6 +97,7 @@ export function init(
 
   for (const hook of hooks) {
     for (const module of modules) {
+      // 收集每个模块的各类hook钩子函数
       const currentHook = module[hook];
       if (currentHook !== undefined) {
         (cbs[hook] as any[]).push(currentHook);
@@ -168,6 +169,7 @@ export function init(
       if (hash < dot) elm.setAttribute("id", sel.slice(hash + 1, dot));
       if (dotIdx > 0)
         elm.setAttribute("class", sel.slice(dot + 1).replace(/\./g, " "));
+      // 执行各个模块(class/style/event)cbs.create钩子函数；创建时都传入emptyNode
       for (i = 0; i < cbs.create.length; ++i) cbs.create[i](emptyNode, vnode);
       if (
         is.primitive(vnode.text) &&
@@ -180,6 +182,7 @@ export function init(
         for (i = 0; i < children.length; ++i) {
           const ch = children[i];
           if (ch != null) {
+            // 递归创建children的dom节点
             api.appendChild(elm, createElm(ch as VNode, insertedVnodeQueue));
           }
         }
@@ -242,6 +245,13 @@ export function init(
     }
   }
 
+  /**
+   * 移除vnode节点
+   * @param parentElm
+   * @param vnodes
+   * @param startIdx
+   * @param endIdx
+   */
   function removeVnodes(
     parentElm: Node,
     vnodes: VNode[],
@@ -280,6 +290,14 @@ export function init(
     }
   }
 
+  /**
+   * 更新子节点(diff算法核心,首位交叉对比)
+   * https://blog.csdn.net/woyebuzhidao321/article/details/111317032
+   * @param parentElm
+   * @param oldCh
+   * @param newCh
+   * @param insertedVnodeQueue
+   */
   function updateChildren(
     parentElm: Node,
     oldCh: VNode[],
@@ -439,6 +457,7 @@ export function init(
     for (i = 0; i < cbs.pre.length; ++i) cbs.pre[i]();
 
     if (isElement(api, oldVnode)) {
+      // 如果旧节点是元素节点，则将其转换为空的vnode
       oldVnode = emptyNodeAt(oldVnode);
     } else if (isDocumentFragment(api, oldVnode)) {
       oldVnode = emptyDocumentFragmentAt(oldVnode);
@@ -449,7 +468,7 @@ export function init(
     } else {
       elm = oldVnode.elm!;
       parent = api.parentNode(elm) as Node;
-
+      // 创建新的dom节点(并且递归创建children的dom节点)，并挂载到vnode.elm上；同时会执行所有的cbs.create钩子函数
       createElm(vnode, insertedVnodeQueue);
 
       if (parent !== null) {

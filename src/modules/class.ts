@@ -28,5 +28,5 @@ function updateClass(oldVnode: VNode, vnode: VNode): void {
     }
   }
 }
-
+// 创建dom节点时更新class，节点update时更新class
 export const classModule: Module = { create: updateClass, update: updateClass };
